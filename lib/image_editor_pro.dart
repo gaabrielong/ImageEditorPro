@@ -33,7 +33,8 @@ SignatureController _controller =
 class ImageEditorPro extends StatefulWidget {
   final Color appBarColor;
   final Color bottomBarColor;
-  ImageEditorPro({this.appBarColor, this.bottomBarColor});
+  final File image;
+  ImageEditorPro({this.appBarColor, this.bottomBarColor, @required this.image});
 
   @override
   _ImageEditorProState createState() => _ImageEditorProState();
@@ -92,6 +93,17 @@ class _ImageEditorProState extends State<ImageEditorPro> {
     multiwidget.clear();
     howmuchwidgetis = 0;
 
+    Future.delayed(Duration.zero, () async {
+      var decodedImage = await decodeImageFromList(
+        File(widget.image.path).readAsBytesSync()
+      );
+
+      setState(() {
+        height = decodedImage.height;
+        width = decodedImage.width;
+        _image = File(widget.image.path);
+      });
+    });
     super.initState();
   }
 
@@ -169,14 +181,14 @@ class _ImageEditorProState extends State<ImageEditorPro> {
                   _controller.points.clear();
                   setState(() {});
                 }),
-            IconButton(
+            /* IconButton(
                 icon: Icon(Icons.camera),
                 onPressed: () {
                   bottomsheets();
-                }),
+                }), */
             FlatButton(
                 child: Text('Done'),
-                textColor: Colors.white,
+                textColor: Colors.black,
                 onPressed: () {
                   screenshotController
                       .capture(
